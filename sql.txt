@@ -1,0 +1,285 @@
+mysql> create database test3
+    -> ;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use test3;
+Database changed
+
+mysql> create table stg(
+    -> code_st int primary key,
+    -> nom_st varchar(15) not null
+    -> );
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> insert into stg
+    -> values(1,'saad');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> create table stg_copy like stg;
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_test3 |
++-----------------+
+| stg             |
+| stg_copy        |
++-----------------+
+2 rows in set (0.01 sec)
+
+mysql> desc stg_copy;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| nom_st  | varchar(15) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> select * from stg_copy;
+Empty set (0.00 sec)
+
+mysql> insert into stg_copy select * from stg;
+Query OK, 1 row affected (0.01 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from stg_copy;
++---------+--------+
+| code_st | nom_st |
++---------+--------+
+|       1 | saad   |
++---------+--------+
+1 row in set (0.00 sec)
+
+mysql> select * from stg;
++---------+--------+
+| code_st | nom_st |
++---------+--------+
+|       1 | saad   |
++---------+--------+
+1 row in set (0.00 sec)
+
+mysql> delete from stg;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from stg;
+Empty set (0.00 sec)
+
+mysql> insert into stg select * from stg_copy;
+Query OK, 1 row affected (0.00 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> select * from stg;
++---------+--------+
+| code_st | nom_st |
++---------+--------+
+|       1 | saad   |
++---------+--------+
+1 row in set (0.00 sec)
+
+mysql> delete from stg_copy where code_st = 1;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from stg_copy;
+Empty set (0.00 sec)
+
+mysql> drop table stg_copy;
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_test3 |
++-----------------+
+| stg             |
++-----------------+
+1 row in set (0.00 sec)
+
+mysql> alter table stg
+    -> drop primary key;
+Query OK, 1 row affected (0.07 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> desc stg;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   |     | NULL    |       |
+| nom_st  | varchar(15) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> alter table stg
+    -> add primary key (code_st);
+Query OK, 0 rows affected (0.17 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc stg;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| nom_st  | varchar(15) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.01 sec)
+
+mysql> create table groupe(
+    -> code_gr int primary key,
+    -> nom_gr varchar(10) not null unique,
+    -> filiere varchar(10) not null);
+Query OK, 0 rows affected (0.05 sec)
+
+mysql> show tables;
++-----------------+
+| Tables_in_test3 |
++-----------------+
+| groupe          |
+| stg             |
++-----------------+
+2 rows in set (0.00 sec)
+
+mysql> desc groupe;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_gr | int         | NO   | PRI | NULL    |       |
+| nom_gr  | varchar(10) | NO   | UNI | NULL    |       |
+| filiere | varchar(10) | NO   |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from groupe;
+Empty set (0.00 sec)
+
+mysql> insert into groupe
+    -> values(1,'dev104','info'),
+    -> (2,'Ges114','Gestion'),
+    -> (3,'dev102','info');
+Query OK, 3 rows affected (0.01 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> select * from groupe;
++---------+--------+---------+
+| code_gr | nom_gr | filiere |
++---------+--------+---------+
+|       1 | dev104 | info    |
+|       2 | Ges114 | Gestion |
+|       3 | dev102 | info    |
++---------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> alter table stg
+    -> add code_gr int ;
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc stg
+    -> ;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| nom_st  | varchar(15) | NO   |     | NULL    |       |
+| code_gr | int         | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from stg;
++---------+--------+---------+
+| code_st | nom_st | code_gr |
++---------+--------+---------+
+|       1 | saad   |    NULL |
++---------+--------+---------+
+1 row in set (0.00 sec)
+
+mysql> alter table stg
+    -> add foreign key (code_gr) references groupe(code_gr);
+Query OK, 1 row affected (0.12 sec)
+Records: 1  Duplicates: 0  Warnings: 0
+
+mysql> desc stg;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| code_st | int         | NO   | PRI | NULL    |       |
+| nom_st  | varchar(15) | NO   |     | NULL    |       |
+| code_gr | int         | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> update stg
+    -> set code_gr = 3 where code_st = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update stg
+    -> set code_gr = 1 where code_st = 2;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> select * from stg;
++---------+--------+---------+
+| code_st | nom_st | code_gr |
++---------+--------+---------+
+|       1 | saad   |       3 |
++---------+--------+---------+
+1 row in set (0.00 sec)
+
+mysql> insert into stg
+    -> values(2,'bouchaib',null);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> update stg
+    -> set code_gr = 1 where code_st = 2;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from stg;
++---------+----------+---------+
+| code_st | nom_st   | code_gr |
++---------+----------+---------+
+|       1 | saad     |       3 |
+|       2 | bouchaib |       1 |
++---------+----------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from groupe;
++---------+--------+---------+
+| code_gr | nom_gr | filiere |
++---------+--------+---------+
+|       1 | dev104 | info    |
+|       2 | Ges114 | Gestion |
+|       3 | dev102 | info    |
++---------+--------+---------+
+3 rows in set (0.00 sec)
+
+mysql> delete from groupe where code_gr = 2;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from groupe;
++---------+--------+---------+
+| code_gr | nom_gr | filiere |
++---------+--------+---------+
+|       1 | dev104 | info    |
+|       3 | dev102 | info    |
++---------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from stg join groupe where stg.code_gr = groupe.code_gr;
++---------+----------+---------+---------+--------+---------+
+| code_st | nom_st   | code_gr | code_gr | nom_gr | filiere |
++---------+----------+---------+---------+--------+---------+
+|       2 | bouchaib |       1 |       1 | dev104 | info    |
+|       1 | saad     |       3 |       3 | dev102 | info    |
++---------+----------+---------+---------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select code_st, nom_st, nom_gr, filiere from stg join groupe where stg.code_gr = groupe.code_gr;
++---------+----------+--------+---------+
+| code_st | nom_st   | nom_gr | filiere |
++---------+----------+--------+---------+
+|       2 | bouchaib | dev104 | info    |
+|       1 | saad     | dev102 | info    |
++---------+----------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql>
